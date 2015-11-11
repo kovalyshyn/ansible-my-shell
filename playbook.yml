@@ -1,0 +1,39 @@
+---
+
+# Webitel Playbook 
+#
+# @author Vitaly Kovalyshyn, 2015
+
+- hosts: all
+  name: "Install my pretty linux shell"
+  tags: ['my-shell']
+  gather_facts: no
+  roles:
+    - { role: 'my-shell' }
+
+
+- hosts: me
+  name: "Install docker role"
+  tags: ['docker']
+  gather_facts: no
+  tasks:
+    - name: "get ansible-galaxy docker role"
+      shell: 'ansible-galaxy install -f webitel.docker'
+
+- hosts: docker
+  name: "Get Docker & Co."
+  sudo: true
+  tags: ['docker']
+  roles:
+    - { role: webitel.docker }
+
+  tasks:
+    - name: "Add SSH user into the docker group"
+      user:
+        name: '{{ item.user }}'
+        groups: 'docker'
+        append: yes
+      with_items:
+        - '{{ ssh_users }}'
+      when: ssh_users is defined
+

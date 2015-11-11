@@ -1,0 +1,9 @@
+---
+
+ssh_users:
+    - user: 'samael'
+      shell: '/bin/zsh'
+      groups: 'adm'
+      # mkpasswd --method=SHA-512
+      password: 'MY-SHA-512-PASSWORD-HASH'
+      authorized: 'public_keys/ssh_keys.pub'

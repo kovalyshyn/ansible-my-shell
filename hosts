@@ -1,0 +1,6 @@
+[docker]
+vibe.kovalyshyn.pp.ua
+#test.webitel.com ansible_ssh_port=8822 ansible_ssh_user=user 
+
+[me]
+localhost   ansible_connection=local

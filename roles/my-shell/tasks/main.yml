@@ -1,0 +1,107 @@
+---
+# Common roles for all hosts
+
+- name: 'Updates apt cache & upgrades dist'
+  apt: 
+    upgrade: 'yes'
+    update_cache: yes
+
+- name: 'Install all necessary software'
+  apt: 
+    name: '{{ item }}'
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - sudo
+    - ntp
+    - zsh 
+    - git
+    - vim
+    - htop
+    - tmux
+    - ngrep
+    - tcpdump
+
+- name: "Start ntp"
+  service: name=ntp state=started enabled=yes
+
+- name: "Add SSH user"
+  user: 
+    name: '{{ item.user }}' 
+    shell: '{{ item.shell }}' 
+    password: '{{ item.password }}' 
+    groups: '{{ item.groups }}'
+  with_items:
+    - '{{ ssh_users }}'
+  when: ssh_users is defined
+
+- name: "Add SSH authorized keys"
+  authorized_key:
+    user: '{{ item.user }}' 
+    key:  '{{ lookup("file", item.authorized ) }}'
+  with_items:
+    - '{{ ssh_users }}'
+  when: ssh_users is defined
+  notify: 
+    - restart ssh
+
+- name: "Configures SSH daemon"
+  lineinfile: 
+    dest: '/etc/ssh/sshd_config'
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.line }}'
+  with_items:
+    - { regexp: '^PasswordAuthentication', line: 'PasswordAuthentication no' }
+    - { regexp: '^PermitRootLogin', line: 'PermitRootLogin no' }
+  notify: 
+    - restart ssh
+
+- name: "The adm groups user can sudo without password"
+  lineinfile: 
+    dest: '/etc/sudoers'
+    state: 'present'
+    regexp: '^%adm'
+    line: '%adm ALL=(ALL) NOPASSWD: ALL'
+  when: ssh_users is defined
+ 
+- name: checkouts 'oh-my-zsh' from git
+  git: 
+    repo: https://github.com/robbyrussell/oh-my-zsh
+    dest: '/home/{{ item.user }}/.oh-my-zsh'
+    accept_hostkey: yes
+  with_items:
+    - '{{ ssh_users }}'
+  when: ssh_users is defined
+  notify: 
+    - fix permissions
+
+- name: "Copy .zshrc"
+  copy:
+    src: ".zshrc"
+    dest: '/home/{{ item.user }}/.zshrc' 
+  with_items:
+    - '{{ ssh_users }}'
+  when: ssh_users is defined
+  notify: 
+    - fix permissions
+
+- name: "Copy .vimrc"
+  copy:
+    src: ".vimrc"
+    dest: '/home/{{ item.user }}/.vimrc' 
+  with_items:
+    - '{{ ssh_users }}'
+  when: ssh_users is defined
+  notify: 
+    - fix permissions
+
+- name: "Copy .tmux.conf"
+  copy:
+    src: ".tmux.conf"
+    dest: '/home/{{ item.user }}/.tmux.conf' 
+  with_items:
+    - '{{ ssh_users }}'
+  when: ssh_users is defined
+  notify: 
+    - fix permissions
+
