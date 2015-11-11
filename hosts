@@ -4,3 +4,6 @@ vibe.kovalyshyn.pp.ua
 
 [me]
 localhost   ansible_connection=local
+
+[common:children]
+docker

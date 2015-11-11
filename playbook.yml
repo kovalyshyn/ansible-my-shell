@@ -4,7 +4,7 @@
 #
 # @author Vitaly Kovalyshyn, 2015
 
-- hosts: all
+- hosts: common
   name: "Install my pretty linux shell"
   tags: ['my-shell']
   gather_facts: no
