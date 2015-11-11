@@ -7,3 +7,11 @@ ssh_users:
       # mkpasswd --method=SHA-512
       password: 'MY-SHA-512-PASSWORD-HASH'
       authorized: 'public_keys/ssh_keys.pub'
+
+ufw_allowed_tcp_ports:
+  - "80"
+  - "443"
+  
+ufw_allowed_udp_ports:
+  - "1:65535"
+

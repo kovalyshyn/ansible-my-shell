@@ -1,0 +1,42 @@
+---
+# UFW roles for all hosts
+
+- name: 'Install UFW firewall'
+  apt: 
+    name: ufw
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: 'Start UFW firewal'
+  service: name=ufw state=started enabled=yes
+
+- name: 'Reset UFW firewall'
+  ufw:
+    state: reset
+
+- name: 'Allow SSH access on instance'
+  ufw:
+    rule: limit
+    name: OpenSSH
+
+- name: 'Open Allowed UDP ports'
+  ufw: 
+    rule: allow
+    port: '{{ item }}'
+    proto: udp
+  with_items: '{{ ufw_allowed_udp_ports }}'
+ 
+- name: 'Open Allowed TCP ports'
+  ufw: 
+    rule: allow
+    port: '{{ item }}'
+    proto: tcp
+  with_items: '{{ ufw_allowed_tcp_ports }}'
+     
+- name: 'Set to deny incoming requests by default'
+  ufw: 
+    policy: deny
+
+- name: 'Turn on UFW'
+  ufw: 
+    state: enabled

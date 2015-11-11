@@ -4,15 +4,22 @@
 #
 # @author Vitaly Kovalyshyn, 2015
 
-- hosts: common
+- hosts: all
   name: "Install my pretty linux shell"
   tags: ['my-shell']
   gather_facts: no
   roles:
     - { role: 'my-shell' }
 
+- hosts: all
+  name: "Enable UFW firewall"
+  sudo: true
+  tags: ['ufw']
+  gather_facts: no
+  roles:
+    - { role: 'ufw' }
 
-- hosts: me
+- hosts: localhost
   name: "Install docker role"
   tags: ['docker']
   gather_facts: no
