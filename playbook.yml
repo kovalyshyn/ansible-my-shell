@@ -10,14 +10,7 @@
   gather_facts: no
   roles:
     - { role: 'my-shell' }
-
-- hosts: all
-  name: "Enable UFW firewall"
-  sudo: true
-  tags: ['ufw']
-  gather_facts: no
-  roles:
-    - { role: 'ufw' }
+    - { role: 'ufw', when: ufw_enabled == 'true' }
 
 - hosts: localhost
   name: "Install docker role"

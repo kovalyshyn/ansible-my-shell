@@ -13,9 +13,6 @@ install:
 install-docker:
 	@(ansible-playbook -i hosts playbook.yml -u samael -t docker --private-key $(PRIVATE_KEY))
 
-ufw:
-	@(ansible-playbook -i hosts playbook.yml -u samael -t ufw --private-key $(PRIVATE_KEY))
-
 setup:
 	@(ansible common -i hosts -m setup -u samael --private-key $(PRIVATE_KEY))
 
