@@ -14,10 +14,10 @@ install-docker:
 	@(ansible-playbook -i hosts playbook.yml -u samael -t docker --private-key $(PRIVATE_KEY))
 
 setup:
-	@(ansible common -i hosts -m setup -u samael --private-key $(PRIVATE_KEY))
+	@(ansible all -i hosts -m setup -u samael --private-key $(PRIVATE_KEY))
 
 ping:
-	@(ansible common -i hosts -m ping -u samael --private-key $(PRIVATE_KEY))
+	@(ansible all -i hosts -m ping -u samael --private-key $(PRIVATE_KEY))
 
 show-tasks:
 	@(ansible-playbook -i hosts playbook.yml --list-tasks)
