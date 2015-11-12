@@ -20,8 +20,12 @@
     - curl
     - sudo
     - tree
-    - htop
     - tmux
+    - lsof
+    - htop
+    - iotop
+    - iftop
+    - iperf
     - ngrep
     - tcpdump
     - dnsutils
