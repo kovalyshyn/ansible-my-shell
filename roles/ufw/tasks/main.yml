@@ -7,9 +7,6 @@
     update_cache: yes
     cache_valid_time: 3600
 
-- name: 'Start UFW firewal'
-  service: name=ufw state=started enabled=yes
-
 - name: 'Reset UFW firewall'
   ufw:
     state: reset
@@ -36,6 +33,12 @@
 - name: 'Set to deny incoming requests by default'
   ufw: 
     policy: deny
+
+- name: "Set the DEFAULT_FORWARD_POLICY for docker"
+  lineinfile: 
+    dest: '/etc/default/ufw'
+    regexp: 'DEFAULT_FORWARD_POLICY'
+    line: 'DEFAULT_FORWARD_POLICY="ACCEPT"'
 
 - name: 'Turn on UFW'
   ufw: 

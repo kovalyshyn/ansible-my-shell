@@ -17,4 +17,3 @@ ufw_allowed_tcp_ports:
   
 ufw_allowed_udp_ports:
   - "1:65535"
-
