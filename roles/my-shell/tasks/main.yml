@@ -24,6 +24,7 @@
     - tmux
     - ngrep
     - tcpdump
+    - dnsutils
 
 - name: "Start ntp"
   service: name=ntp state=started enabled=yes
