@@ -13,10 +13,11 @@
     cache_valid_time: 3600
   with_items:
     - jq
-    - ntp
     - zsh 
     - git
     - vim
+    - ntp
+    - mtr
     - curl
     - sudo
     - tree
