@@ -12,20 +12,12 @@
     - { role: 'my-shell' }
     - { role: 'ufw', when: ufw_enabled == 'true' }
 
-- hosts: localhost
-  name: "Install docker role"
-  tags: ['docker']
-  gather_facts: no
-  tasks:
-    - name: "get ansible-galaxy docker role"
-      shell: 'ansible-galaxy install -f webitel.docker'
-
 - hosts: docker
   name: "Get Docker & Co."
   sudo: true
   tags: ['docker']
   roles:
-    - { role: webitel.docker }
+    - { role: 'docker' }
 
   tasks:
     - name: "Add SSH user into the docker group"

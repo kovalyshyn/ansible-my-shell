@@ -1,0 +1,41 @@
+---
+- name: "Install apt-transport-https"
+  apt: name=apt-transport-https state=latest
+
+- name: "Add docker repository key"
+  apt_key: keyserver=hkp://pgp.mit.edu:80 id=58118E89F3A912897C070ADBF76221572C52609D
+
+- name: "Add docker repository for Debian"
+  apt_repository: repo='deb https://apt.dockerproject.org/repo debian-{{ ansible_lsb.codename }} main' update_cache=yes
+  when: ansible_lsb.id == 'Debian'
+
+- name: "Add docker repository for Ubuntu"
+  apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-{{ ansible_lsb.codename }} main' update_cache=yes
+  when: ansible_lsb.id == 'Ubuntu'
+
+- name: "Get docker and easy_install"
+  apt: name={{ item }} state=latest
+  with_items:
+    - docker-engine
+    - python-setuptools
+
+- name: "Enable docker UFW support in docker.service"
+  lineinfile: 
+    dest: '/lib/systemd/system/docker.service'
+    regexp: '^ExecStart=/usr/bin/docker'
+    line: 'ExecStart=/usr/bin/docker daemon -H fd:// --iptables=false'
+  when: ufw_enabled == 'true'
+
+- name: "Enable docker UFW support in default"
+  lineinfile: 
+    dest: '/etc/default/docker'
+    regexp: 'DOCKER_OPTS'
+    line: 'DOCKER_OPTS="-H fd:// --iptables=false"'
+  when: ufw_enabled == 'true'
+
+- name: "Start docker"
+  service: name=docker state=started enabled=yes
+
+- name: "Install docker-compose"
+  easy_install: name=docker-compose
+
