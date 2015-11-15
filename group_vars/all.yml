@@ -8,6 +8,10 @@ ssh_users:
       password: 'MY-SHA-512-PASSWORD-HASH'
       authorized: 'public_keys/ssh_keys.pub'
 
+# Generate additional locales
+locales_gen:
+  - "uk_UA.UTF-8"
+
 # true|false for UFW Firewall
 ufw_enabled: "false"
 

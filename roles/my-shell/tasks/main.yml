@@ -1,16 +1,21 @@
 ---
 # Common roles for all hosts
 
+- name: 'Generate additional locales'
+  locale_gen:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - '{{ locales_gen }}'
+
 - name: 'Updates apt cache & upgrades dist'
   apt: 
     upgrade: 'yes'
-    update_cache: yes
+    update_cache: 'yes'
 
 - name: 'Install all necessary software'
   apt: 
     name: '{{ item }}'
-    update_cache: yes
-    cache_valid_time: 3600
   with_items:
     - jq
     - zsh 
@@ -22,6 +27,7 @@
     - sudo
     - tree
     - tmux
+    - mosh
     - lsof
     - htop
     - iotop
