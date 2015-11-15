@@ -4,8 +4,7 @@
 - name: 'Install UFW firewall'
   apt: 
     name: ufw
-    update_cache: yes
-    cache_valid_time: 3600
+    state: latest
 
 - name: 'Reset UFW firewall'
   ufw:
