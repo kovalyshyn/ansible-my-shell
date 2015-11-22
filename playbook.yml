@@ -7,7 +7,6 @@
 - hosts: all
   name: "Install my pretty linux shell"
   tags: ['my-shell']
-  gather_facts: no
   roles:
     - { role: 'my-shell' }
     - { role: 'ufw', when: ufw_enabled == 'true' }
