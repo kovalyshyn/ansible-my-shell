@@ -12,8 +12,32 @@ ssh_users:
 locales_gen:
   - "uk_UA.UTF-8"
 
+# My software list 
+software:
+  - jq
+  - zsh 
+  - git
+  - vim
+  - ntp
+  - mtr
+  - curl
+  - sudo
+  - tree
+  - tmux
+  - mosh
+  - lsof
+  - htop
+  - iotop
+  - iftop
+  - iperf
+  - ngrep
+  - tcpdump
+
 # true|false for UFW Firewall
 ufw_enabled: "false"
+
+# ping allow|deny
+ufw_ping: "deny"
 
 ufw_allowed_tcp_ports:
   - "80"

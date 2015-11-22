@@ -1,19 +1,22 @@
 ---
 # UFW roles for all hosts
 
-- name: 'Install UFW firewall'
+- name: 'Install UFW firewall with APT'
   apt: 
     name: ufw
     state: latest
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - name: 'Reset UFW firewall'
   ufw:
     state: reset
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - name: 'Allow SSH access on instance'
   ufw:
     rule: limit
     name: OpenSSH
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - name: 'Open Allowed UDP ports'
   ufw: 
@@ -21,6 +24,7 @@
     port: '{{ item }}'
     proto: udp
   with_items: '{{ ufw_allowed_udp_ports }}'
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
  
 - name: 'Open Allowed TCP ports'
   ufw: 
@@ -28,17 +32,34 @@
     port: '{{ item }}'
     proto: tcp
   with_items: '{{ ufw_allowed_tcp_ports }}'
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
      
 - name: 'Set to deny incoming requests by default'
   ufw: 
     policy: deny
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - name: "Set the DEFAULT_FORWARD_POLICY for docker"
   lineinfile: 
     dest: '/etc/default/ufw'
     regexp: 'DEFAULT_FORWARD_POLICY'
     line: 'DEFAULT_FORWARD_POLICY="ACCEPT"'
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: "Deny ping"
+  lineinfile: 
+    dest: '/etc/ufw/before.rules'
+    regexp: '^{{ item }}'
+    line: '{{ item }} DROP'
+  with_items:
+    - '-A ufw-before-input -p icmp --icmp-type destination-unreachable -j'
+    - '-A ufw-before-input -p icmp --icmp-type source-quench -j'
+    - '-A ufw-before-input -p icmp --icmp-type time-exceeded -j'
+    - '-A ufw-before-input -p icmp --icmp-type parameter-problem -j'
+    - '-A ufw-before-input -p icmp --icmp-type echo-request -j'
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - name: 'Turn on UFW'
   ufw: 
     state: enabled
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
