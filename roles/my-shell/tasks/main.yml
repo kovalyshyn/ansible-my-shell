@@ -1,14 +1,6 @@
 ---
 # Common roles for all hosts
 
-- name: 'Generate additional locales'
-  locale_gen:
-    name: '{{ item }}'
-    state: present
-  with_items:
-    - '{{ locales_gen }}'
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-
 - name: 'Updates apt cache & upgrades dist'
   apt: 
     upgrade: 'yes'
@@ -23,8 +15,19 @@
     - '{{ software }}'
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
-- name: 'Install dnsutils with APT'
-  apt: name=dnsutils state=latest
+- apt:
+    name: '{{ item }}'
+    state: latest
+  with_items:
+    - 'locales'
+    - 'dnsutils'
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- locale_gen:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - '{{ locales_gen }}'
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - name: "Start ntp"
@@ -47,7 +50,7 @@
 
 - name: 'Install bind-utils with YUM'
   yum: name=bind-utils state=latest
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
 - name: "Start ntp"
   service: name=ntpd state=started enabled=yes
@@ -80,7 +83,7 @@
     line: '{{ item.line }}'
   with_items:
     - { regexp: '^PasswordAuthentication', line: 'PasswordAuthentication no' }
-    - { regexp: '^PermitRootLogin', line: 'PermitRootLogin no' }
+    - { regexp: '^PermitRootLogin', line: 'PermitRootLogin without-password' }
   notify: 
     - restart ssh
 
