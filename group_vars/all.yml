@@ -20,6 +20,7 @@ software:
   - vim
   - ntp
   - mtr
+  - nmap
   - curl
   - sudo
   - tree
