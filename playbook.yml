@@ -13,8 +13,8 @@
 
 - hosts: docker
   name: "Get Docker & Co."
-  sudo: true
   tags: ['docker']
+  become: true
   roles:
     - { role: 'docker' }
 
